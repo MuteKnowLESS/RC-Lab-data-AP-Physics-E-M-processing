@@ -96,8 +96,36 @@ def plot_folder_data_current(folder_name, combined_data_list):
 
     # Save or show the plot
     #plt.savefig(f"{folder_name}_plot_with_current.png", dpi=300)  # Save with a high resolution
-    plt.show()
+    # plt.show()
 
+def plot_folder_data_volt_differece(folder_name, combined_data_list):
+    """Creates subplots for all combined data within a folder."""
+    fig, axes = plt.subplots(len(combined_data_list), 1, figsize=(10, 5 * len(combined_data_list)))
+    fig.suptitle(f"{folder_name} (Voltage Difference)", fontsize=16)
+    axes = axes if len(combined_data_list) > 1 else [axes]
+    
+
+    for ax, (file_name, df) in zip(axes, combined_data_list):
+    #    ax.plot(df[" time"], df[" cal[0]_1"], label='Voltage Input', color='blue')
+     #   ax.plot(df[" time"], df[" cal[0]_2"], label='Voltage Across Capacitor', color='red')
+        ax.plot(df[" time"], df[" cal[0]_1"] - df[" cal[0]_2"], label='Voltage Difference', color='green')
+        ax.set_title(file_name.split(", Ana")[0])
+        ax.set_xlabel("Time")
+        ax.set_ylabel("V input - V across capacitor")
+        ax.legend()
+        ax.grid(True)  # Enable grid lines for better readability
+
+    #plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust layout to include the main title
+
+        # Adjust the spacing between subplots for better visibility
+    plt.subplots_adjust(hspace=0.5)  # Adjust the vertical spacing between subplots
+
+
+    plt.savefig(f"DATA_SAVED_FIG/{folder_name}_plot_volt_difference_with_grid.png", dpi=300)  # Save with a high resolution
+    
+    
+  
+    plt.show()
 
 def main():
     """Main function to process and plot data."""
@@ -137,8 +165,9 @@ def main():
                 print(f"Error processing files {ana7_file} and {matching_ana8_file}: {e}")
         
         if combined_data_list:
-            plot_folder_data_current(folder, combined_data_list)
-            plot_folder_data(folder, combined_data_list)
+            #plot_folder_data_current(folder, combined_data_list)
+            #plot_folder_data(folder, combined_data_list)
+            plot_folder_data_volt_differece(folder, combined_data_list)
 
 if __name__ == "__main__":
     main()
